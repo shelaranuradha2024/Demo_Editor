@@ -22,7 +22,7 @@ const CustomEditor = () => {
     const savedContent = localStorage.getItem(LOCAL_STORAGE_KEY);
     if (savedContent) {
       try {
-        const contentStates = JSON.parse(savedContent); // Retrieve the array of content states
+        const contentStates = JSON.parse(savedContent); 
         const combinedContent = contentStates.reduce((acc, rawContent) => {
           const contentState = convertFromRaw(rawContent);
           return acc.merge({ blockMap: acc.getBlockMap().concat(contentState.getBlockMap()) });
@@ -42,7 +42,6 @@ const CustomEditor = () => {
     const contentState = editorState.getCurrentContent();
     const rawContent = convertToRaw(contentState);
 
-    // Fetch the current saved content (if any), ensuring it's an array
     const savedContent = localStorage.getItem(LOCAL_STORAGE_KEY);
     let contentStates = [];
 
@@ -66,6 +65,13 @@ const CustomEditor = () => {
 
     alert("Content saved successfully!");
     setEditorState(EditorState.createEmpty()); // Clear the editor
+  };
+
+  // Delete all content from localStorage and clear the editor
+  const deleteContent = () => {
+    localStorage.removeItem(LOCAL_STORAGE_KEY);
+    setEditorState(EditorState.createEmpty()); // Clear the editor
+    alert("All content deleted successfully!");
   };
 
   // Handle special triggers like #, *, **, ***
@@ -104,7 +110,7 @@ const CustomEditor = () => {
     const newContentState = Modifier.replaceText(
       state.getCurrentContent(),
       state.getSelection().merge({ anchorOffset: 0 }),
-      "" // Remove the trigger
+      "" 
     );
     const newState = EditorState.push(state, newContentState, "remove-range");
     setEditorState(RichUtils.toggleInlineStyle(newState, style));
@@ -123,8 +129,11 @@ const CustomEditor = () => {
   return (
     <div style={{ margin: "20px" }}>
       <h1>Demo Editor</h1>
-      <button onClick={saveContent} style={{ marginBottom: "10px" }}>
+      <button onClick={saveContent} style={{ marginBottom: "10px", marginRight: "10px" }}>
         Save
+      </button>
+      <button onClick={deleteContent} style={{ marginBottom: "10px" }}>
+        Delete All Content
       </button>
       <div
         style={{
